@@ -34,16 +34,20 @@ const Select = ({ multiple, options, value, setValue }: SelectProps) => {
   const [highlitedIndex, setHighlitedIndex] = useState(0)
   const selectContainerRef = useRef<HTMLDivElement>(null)
 
-  function selectOption(highlitedOption: typeof options[0]) {
+  //   function selectOption(highlitedOption: typeof options[0]) {
+  function selectOption(highlitedOption: SelectOption) {
     // if (multiple && Array.isArray(value)) {
     if (multiple) {
       if (value.includes(highlitedOption)) {
+        // multi select -> already in array -> remove option from array / unselect
         setValue(value.filter((value) => value !== highlitedOption))
       } else {
+        // multi select -> new value -> add to array of selected options
         // onChange([...value2, option])
         setValue([...value, highlitedOption])
       }
     } else {
+      // if single select -> replace value
       if (highlitedOption !== value) setValue(highlitedOption)
     }
   }
@@ -69,9 +73,10 @@ const Select = ({ multiple, options, value, setValue }: SelectProps) => {
           break
         case 'Enter':
         case 'Space':
-          isOpen && setValue(options[highlitedIndex])
+          //   isOpen && setValue(options[highlitedIndex])
           // ! Argument of type 'SelectOption' is not assignable to parameter of type 'SelectOption & SelectOption[]'.
           // ! Translation: I was expecting SelectOption & SelectOption[], but you passed SelectOption
+          isOpen && selectOption(options[highlitedIndex])
           setIsOpen((prev) => !prev)
           break
         case 'Escape':
