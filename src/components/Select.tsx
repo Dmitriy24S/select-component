@@ -31,31 +31,33 @@ type SelectProps = {
 
 const Select = ({ multiple, options, value, setValue }: SelectProps) => {
   const [isOpen, setIsOpen] = useState(false)
-  const [highlitedIndex, setHighlitedIndex] = useState(0)
+  const [highlightedIndex, setHighlightedIndex] = useState<number>(0)
+  //   const [highlightedIndex, setHighlightedIndex] = useState<number>(-1)
   const selectContainerRef = useRef<HTMLDivElement>(null)
 
-  //   function selectOption(highlitedOption: typeof options[0]) {
-  function selectOption(highlitedOption: SelectOption) {
+  //   function selectOption(HighlightedOption: typeof options[0]) {
+  function selectOption(highlightedOption: SelectOption) {
     // if (multiple && Array.isArray(value)) {
     if (multiple) {
-      if (value.includes(highlitedOption)) {
+      if (value.includes(highlightedOption)) {
         // multi select -> already in array -> remove option from array / unselect
-        setValue(value.filter((value) => value !== highlitedOption))
+        setValue(value.filter((value) => value !== highlightedOption))
       } else {
         // multi select -> new value -> add to array of selected options
         // onChange([...value2, option])
-        setValue([...value, highlitedOption])
+        setValue([...value, highlightedOption])
       }
     } else {
       // if single select -> replace value
-      if (highlitedOption !== value) setValue(highlitedOption)
+      if (highlightedOption !== value) setValue(highlightedOption)
     }
   }
 
   // start from top when open list
   useEffect(() => {
     console.log('set index 0')
-    setHighlitedIndex(0)
+    setHighlightedIndex(0)
+    // setHighlightedIndex(-1)
   }, [isOpen])
 
   // key control
@@ -66,18 +68,20 @@ const Select = ({ multiple, options, value, setValue }: SelectProps) => {
       switch (e.code) {
         case 'ArrowDown':
           setIsOpen(true)
-          highlitedIndex < options.length - 1 && setHighlitedIndex((prev) => prev + 1)
+          highlightedIndex < options.length - 1 && setHighlightedIndex((prev) => prev + 1)
+          highlightedIndex === -1 && setHighlightedIndex(0)
           break
         case 'ArrowUp':
-          highlitedIndex > 0 && setHighlitedIndex((prev) => prev - 1)
+          highlightedIndex > 0 && setHighlightedIndex((prev) => prev - 1)
           break
         case 'Enter':
         case 'Space':
-          //   isOpen && setValue(options[highlitedIndex])
+          //   isOpen && setValue(options[HighlightedIndex])
           // ! Argument of type 'SelectOption' is not assignable to parameter of type 'SelectOption & SelectOption[]'.
           // ! Translation: I was expecting SelectOption & SelectOption[], but you passed SelectOption
-          isOpen && selectOption(options[highlitedIndex])
+          isOpen && selectOption(options[highlightedIndex])
           setIsOpen((prev) => !prev)
+          //   setHighlightedIndex(-1)
           break
         case 'Escape':
           setIsOpen(false)
@@ -93,7 +97,7 @@ const Select = ({ multiple, options, value, setValue }: SelectProps) => {
       // document.removeEventListener('keydown', keyHandler)
       selectContainerRef.current?.removeEventListener('keydown', keyHandler)
     }
-  }, [highlitedIndex, isOpen])
+  }, [highlightedIndex, isOpen])
 
   return (
     <div
@@ -126,11 +130,15 @@ const Select = ({ multiple, options, value, setValue }: SelectProps) => {
             key={option.label}
             className={
               multiple
-                ? ['option', value.includes(option) ? 'active' : ''].join(' ')
+                ? [
+                    'option',
+                    value.includes(option) ? 'active' : '',
+                    index === highlightedIndex ? 'highlighted' : '',
+                  ].join(' ')
                 : [
                     'option',
                     value === option ? 'active' : '',
-                    index === highlitedIndex ? 'highlited' : '',
+                    index === highlightedIndex ? 'highlighted' : '',
                   ].join(' ')
             }
           >

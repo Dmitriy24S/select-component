@@ -133,13 +133,18 @@ button:focus-visible {
   transition: background-color 200ms ease;
 }
 
-.highlited,
+.highlighted,
 .option:not(.active):hover {
   background-color: rgb(233, 233, 233);
 }
 
 .active {
   background-color: rgb(151, 255, 189);
+}
+
+.active.highlighted,
+.active:hover {
+  background-color: rgb(121, 239, 165);
 }
 
 .remove-btn {
