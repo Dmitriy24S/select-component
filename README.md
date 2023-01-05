@@ -4,7 +4,7 @@
 
 Custom select component (single/multi option). Created with React (+tests) & CSS.
 
-[Live Demo](https://https://select-component-three.vercel.app/) 👈
+[Live Demo](https://select-component-three.vercel.app/) 👈
 
 ## How to start
 
