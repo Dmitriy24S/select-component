@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from 'react'
-import { options } from '../App'
 
 export type SelectOption = {
   label: string
@@ -101,20 +100,31 @@ const Select = ({ multiple, options, value, setValue }: SelectProps) => {
 
   return (
     <div
+      data-testid='optionsList'
       className='select'
       tabIndex={0}
       ref={selectContainerRef}
       onClick={() => setIsOpen((prev) => !prev)}
       // onKeyDown={(e) => e.code === 'Space' && setIsOpen2((prev) => !prev)}
       onBlur={() => setIsOpen(false)} // close on click outside
+      aria-expanded={isOpen}
     >
-      <div className='value'>
+      <div className='value' data-testid='selectedValuesContainer'>
         {multiple
           ? value.map((value, index) => (
-              <div className='valueChip' onClick={(e) => e.stopPropagation()} key={index}>
+              <div
+                className='valueChip'
+                onClick={(e) => e.stopPropagation()}
+                key={index}
+                data-testid='valueChip'
+              >
                 {/* prevent open close if click on text */}
                 {value.label}
-                <button className='remove-btn' onClick={() => selectOption(value)}>
+                <button
+                  className='remove-btn'
+                  data-testid='removeBtn'
+                  onClick={() => selectOption(value)}
+                >
                   &times;
                 </button>
               </div>
@@ -126,6 +136,7 @@ const Select = ({ multiple, options, value, setValue }: SelectProps) => {
       <ul className={['options', isOpen ? 'show' : ''].join(' ')}>
         {options.map((option, index) => (
           <li
+            data-testid='selectOption'
             onClick={() => selectOption(option)}
             key={option.label}
             className={
